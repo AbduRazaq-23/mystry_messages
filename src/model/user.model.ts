@@ -1,28 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-
-// MessageSchema
-export interface Message extends Document {
-  content: string;
-  createdAt: Date;
-}
-
-const MessageSchema: Schema<Message> = new Schema<Message>({
-  content: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    required: true,
-    default: Date.now(),
-  },
-});
-
-const MessageModel =
-  (mongoose.models.Message as mongoose.Model<Message>) ||
-  mongoose.model<Message>("Message", MessageSchema);
-
-export default MessageModel;
+import { Message } from "./message.model";
+import MessageModel from "./message.model";
 
 // userSchema
 export interface User extends Document {
@@ -36,7 +14,7 @@ export interface User extends Document {
   messages: Message[];
 }
 
-const userSchema: Schema<User> = new Schema<User>({
+const userSchema: Schema<User> = new Schema({
   username: {
     type: String,
     required: [true, "user name is required"],
@@ -68,8 +46,10 @@ const userSchema: Schema<User> = new Schema<User>({
     type: Boolean,
     default: true,
   },
-  messages: [MessageSchema],
+  messages: [MessageModel],
 });
 
-export const UserModel =
+const UserModel =
   mongoose.models.User || mongoose.model<User>("User", userSchema);
+
+export default UserModel;
